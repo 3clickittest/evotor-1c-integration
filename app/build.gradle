@@ -30,14 +30,16 @@ android {
 dependencies {
     // AndroidX библиотеки
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Evotor Integration Library
-    implementation 'com.github.evotor:integration-library:v0.6.+'
+    implementation('com.github.evotor:integration-library:v0.6.+') {
+        exclude group: 'com.android.support'
+    }
 
     // Для работы с HTTP запросами
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     // Для работы с JSON
     implementation 'com.google.code.gson:gson:2.10.1'
