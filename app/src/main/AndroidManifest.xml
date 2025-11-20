@@ -17,6 +17,11 @@
         android:theme="@style/Theme.EevotorIntegration"
         android:usesCleartextTraffic="false">
 
+        <!-- UUID приложения Эвотор -->
+        <meta-data
+            android:name="app_uuid"
+            android:value="d1cf8e92-7374-4957-9bbd-c84d2d4522d9" />
+
         <!-- Главная Activity -->
         <activity
             android:name=".MainActivity"
