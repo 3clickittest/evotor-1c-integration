@@ -33,9 +33,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    // Evotor Integration Library
-    implementation('com.github.evotor:integration-library:v0.6.+') {
+    // Evotor Integration Library (для работы на терминале)
+    // Примечание: для работы только через REST API эта библиотека не обязательна
+    implementation('com.github.evotor:integration-library:v0.6.30') {
         exclude group: 'com.android.support'
+        exclude group: 'com.android.support.test'
     }
 
     // Для работы с HTTP запросами
