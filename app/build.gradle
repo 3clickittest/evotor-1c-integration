@@ -33,14 +33,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    // Evotor Integration Library (для работы на терминале)
-    // Примечание: для работы только через REST API эта библиотека не обязательна
-    implementation('com.github.evotor:integration-library:v0.6.30') {
-        exclude group: 'com.android.support'
-        exclude group: 'com.android.support.test'
-    }
+    // Evotor Integration Library - ОТКЛЮЧЕНА
+    // Библиотека недоступна через JitPack, но не критична для работы через REST API
+    // Приложение работает через API Облака Эвотор (https://api.evotor.ru/api/v1)
+    // BroadcastReceiver для событий работает через стандартные Android Intent
+    // Если нужна работа непосредственно на терминале, используйте официальный SDK
+    // implementation 'com.github.evotor:integration-library:v0.6.30'
 
-    // Для работы с HTTP запросами
+    // Для работы с HTTP запросами (REST API)
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     // Для работы с JSON

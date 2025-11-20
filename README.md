@@ -16,13 +16,15 @@ Android-приложение для интеграции смарт-термин
 - **Min SDK:** 26 (Android 8.0)
 - **Target SDK:** 33 (Android 13)
 - **Java:** 8 (VERSION_1_8)
-- **Gradle:** 7.4.2
+- **Gradle:** 8.2
+- **Android Gradle Plugin:** 8.1.4
 - **Библиотеки:**
-  - Evotor Integration Library v0.6.+
-  - OkHttp 4.10.0
-  - Gson 2.10.1
+  - OkHttp 4.12.0 (для REST API)
+  - Gson 2.10.1 (для JSON)
   - AndroidX AppCompat 1.6.1
-  - Material Components 1.9.0
+  - Material Components 1.11.0
+
+**Примечание:** Evotor Integration Library не используется, так как приложение работает через REST API Облака Эвотор, а не через SDK терминала.
 
 ## Архитектура проекта
 
