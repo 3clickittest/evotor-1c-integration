@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.evotor.integration'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.evotor.integration"
+        minSdk 26
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // AndroidX библиотеки
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Evotor Integration Library
+    implementation 'com.github.evotor:integration-library:v0.6.+'
+
+    // Для работы с HTTP запросами
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
+    // Для работы с JSON
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
