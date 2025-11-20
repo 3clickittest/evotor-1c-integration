@@ -53,7 +53,7 @@ public class SyncService {
         final String testStoreUuid = "20170804-0000-5000-8000-100000000001";
 
         final AtomicInteger completedTasks = new AtomicInteger(0);
-        final AtomicInteger totalTasks = 2;
+        final int totalTasks = 2;
         final StringBuilder errors = new StringBuilder();
 
         // Синхронизация документов
