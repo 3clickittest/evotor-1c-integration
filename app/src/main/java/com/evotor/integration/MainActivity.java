@@ -2,221 +2,147 @@ package com.evotor.integration;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.evotor.integration.services.SyncService;
-import com.evotor.integration.utils.Logger;
-import com.evotor.integration.utils.PreferencesHelper;
+import com.evotor.integration.adapters.OrdersAdapter;
+import com.evotor.integration.adapters.ReceiptsAdapter;
+import com.evotor.integration.api.models.Document;
+import com.evotor.integration.api.models.Order;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Главный экран приложения
+ * Главный экран приложения с разделами Заказы и Чеки
  */
 public class MainActivity extends AppCompatActivity {
 
-    private TextView syncStatusTextView;
-    private TextView lastSyncTextView;
-    private TextView logTextView;
-    private Button startSyncButton;
-    private Button settingsButton;
-    private Button clearLogButton;
+    private Toolbar toolbar;
+    private RecyclerView ordersRecyclerView;
+    private RecyclerView receiptsRecyclerView;
 
-    private PreferencesHelper preferencesHelper;
-    private SyncService syncService;
-    private SimpleDateFormat dateFormat;
+    private OrdersAdapter ordersAdapter;
+    private ReceiptsAdapter receiptsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.app_name);
-        }
-
-        preferencesHelper = new PreferencesHelper(this);
-        syncService = new SyncService(this);
-        dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
-
         initViews();
-        setupListeners();
-        setupLogger();
-        updateUI();
+        setupToolbar();
+        setupRecyclerViews();
+        loadData();
     }
 
     private void initViews() {
-        syncStatusTextView = findViewById(R.id.syncStatusTextView);
-        lastSyncTextView = findViewById(R.id.lastSyncTextView);
-        logTextView = findViewById(R.id.logTextView);
-        startSyncButton = findViewById(R.id.startSyncButton);
-        settingsButton = findViewById(R.id.settingsButton);
-        clearLogButton = findViewById(R.id.clearLogButton);
+        toolbar = findViewById(R.id.toolbar);
+        ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
+        receiptsRecyclerView = findViewById(R.id.receiptsRecyclerView);
     }
 
-    private void setupListeners() {
-        startSyncButton.setOnClickListener(new View.OnClickListener() {
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+        }
+    }
+
+    private void setupRecyclerViews() {
+        // Настройка адаптера заказов
+        ordersAdapter = new OrdersAdapter(new OrdersAdapter.OnOrderClickListener() {
             @Override
-            public void onClick(View v) {
-                startSync();
+            public void onOrderClick(Order order) {
+                openOrderDetails(order);
             }
         });
+        ordersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ordersRecyclerView.setAdapter(ordersAdapter);
 
-        settingsButton.setOnClickListener(new View.OnClickListener() {
+        // Настройка адаптера чеков
+        receiptsAdapter = new ReceiptsAdapter(new ReceiptsAdapter.OnReceiptClickListener() {
             @Override
-            public void onClick(View v) {
-                openSettings();
+            public void onReceiptClick(Document receipt) {
+                openReceiptDetails(receipt);
             }
         });
-
-        clearLogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearLog();
-            }
-        });
+        receiptsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        receiptsRecyclerView.setAdapter(receiptsAdapter);
     }
 
-    private void setupLogger() {
-        Logger.setLogListener(new Logger.LogListener() {
-            @Override
-            public void onNewLogEntry(Logger.LogEntry entry) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateLogView();
-                    }
-                });
-            }
-        });
+    private void loadData() {
+        // TODO: Загрузить заказы из 1С или локальной базы данных
+        List<Order> orders = createTestOrders();
+        ordersAdapter.setOrders(orders);
+
+        // TODO: Загрузить чеки из Evotor Cloud API
+        List<Document> receipts = new ArrayList<>();
+        receiptsAdapter.setReceipts(receipts);
     }
 
-    private void updateUI() {
-        if (!preferencesHelper.hasApiToken()) {
-            syncStatusTextView.setText(R.string.no_token_configured);
-            syncStatusTextView.setTextColor(getResources().getColor(R.color.orange));
-            startSyncButton.setEnabled(false);
-            return;
-        }
+    /**
+     * Создает тестовые заказы для проверки интерфейса
+     * TODO: Удалить после реализации загрузки реальных данных
+     */
+    private List<Order> createTestOrders() {
+        List<Order> orders = new ArrayList<>();
 
-        startSyncButton.setEnabled(true);
+        Order order1 = new Order(
+                "1",
+                "0000-00000057",
+                "16.11.2025 15:57",
+                "Белошапкин Андрей",
+                1000.00
+        );
 
-        boolean syncEnabled = preferencesHelper.isSyncEnabled();
-        if (syncEnabled) {
-            syncStatusTextView.setText(R.string.sync_status_running);
-            syncStatusTextView.setTextColor(getResources().getColor(R.color.green));
-        } else {
-            syncStatusTextView.setText(R.string.sync_status_idle);
-            syncStatusTextView.setTextColor(getResources().getColor(R.color.gray));
-        }
+        Order order2 = new Order(
+                "2",
+                "0000-00000058",
+                "16.11.2025 16:30",
+                "Иванов Иван",
+                500.00
+        );
 
-        long lastSyncTime = preferencesHelper.getLastSyncTime();
-        if (lastSyncTime > 0) {
-            String formattedDate = dateFormat.format(new Date(lastSyncTime));
-            lastSyncTextView.setText(formattedDate);
-        } else {
-            lastSyncTextView.setText(R.string.never_synced);
-        }
+        Order order3 = new Order(
+                "3",
+                "0000-00000059",
+                "16.11.2025 17:15",
+                "Петров Петр",
+                750.00
+        );
 
-        updateLogView();
+        orders.add(order1);
+        orders.add(order2);
+        orders.add(order3);
+
+        return orders;
     }
 
-    private void updateLogView() {
-        List<Logger.LogEntry> entries = Logger.getLogEntries();
-        StringBuilder logText = new StringBuilder();
-
-        for (Logger.LogEntry entry : entries) {
-            logText.append(entry.toString()).append("\n");
-        }
-
-        logTextView.setText(logText.toString());
-    }
-
-    private void startSync() {
-        if (!preferencesHelper.hasApiToken()) {
-            Toast.makeText(this, R.string.no_token_configured, Toast.LENGTH_SHORT).show();
-            openSettings();
-            return;
-        }
-
-        Logger.i("Запуск синхронизации");
-        syncStatusTextView.setText(R.string.sync_status_running);
-        syncStatusTextView.setTextColor(getResources().getColor(R.color.green));
-
-        syncService.performSync(new SyncService.SyncCallback() {
-            @Override
-            public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        preferencesHelper.saveLastSyncTime(System.currentTimeMillis());
-                        syncStatusTextView.setText(R.string.sync_status_idle);
-                        syncStatusTextView.setTextColor(getResources().getColor(R.color.gray));
-                        updateUI();
-                        Toast.makeText(MainActivity.this, "Синхронизация завершена", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(final String error) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        syncStatusTextView.setText(R.string.sync_status_error);
-                        syncStatusTextView.setTextColor(getResources().getColor(R.color.red));
-                        Toast.makeText(MainActivity.this, "Ошибка: " + error, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
-    }
-
-    private void openSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
+    private void openOrderDetails(Order order) {
+        Intent intent = new Intent(this, OrderDetailsActivity.class);
+        intent.putExtra(OrderDetailsActivity.EXTRA_ORDER_ID, order.getId());
+        intent.putExtra(OrderDetailsActivity.EXTRA_ORDER_NUMBER, order.getNumber());
+        intent.putExtra(OrderDetailsActivity.EXTRA_ORDER_DATE, order.getDate());
+        intent.putExtra(OrderDetailsActivity.EXTRA_CUSTOMER_NAME, order.getCustomerName());
+        intent.putExtra(OrderDetailsActivity.EXTRA_TOTAL_AMOUNT, order.getAmount());
         startActivity(intent);
     }
 
-    private void clearLog() {
-        Logger.clearLog();
-        updateLogView();
-        Toast.makeText(this, "Лог очищен", Toast.LENGTH_SHORT).show();
+    private void openReceiptDetails(Document receipt) {
+        // TODO: Реализовать открытие детализации чека
+        // Intent intent = new Intent(this, ReceiptDetailsActivity.class);
+        // intent.putExtra("receipt_id", receipt.getUuid());
+        // startActivity(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateUI();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            openSettings();
-            return true;
-        } else if (id == R.id.action_refresh) {
-            updateUI();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        // Обновить данные при возврате на экран
+        loadData();
     }
 }

@@ -38,12 +38,17 @@
                 android:value="#FF6200EE" />
         </activity>
 
-        <!-- Activity настроек -->
+        <!-- Activity детализации заказа -->
         <activity
-            android:name=".SettingsActivity"
+            android:name=".OrderDetailsActivity"
             android:exported="false"
-            android:label="@string/settings_title"
             android:parentActivityName=".MainActivity" />
+
+        <!-- Activity оплаты чека -->
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false"
+            android:parentActivityName=".OrderDetailsActivity" />
 
         <!-- BroadcastReceiver для событий чеков -->
         <receiver
