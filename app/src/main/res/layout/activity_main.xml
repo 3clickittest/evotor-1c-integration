@@ -1,96 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sync_status_label"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/syncStatusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sync_status_idle"
-        android:textSize="14sp"
-        android:textColor="@color/gray"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/last_sync_label"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/lastSyncTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/never_synced"
-        android:textSize="14sp"
-        android:textColor="@color/gray"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp" />
-
-    <LinearLayout
+    <!-- Toolbar с меню и настройками -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/startSyncButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/start_sync_button"
-            android:layout_marginEnd="4dp" />
-
-        <Button
-            android:id="@+id/settingsButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/open_settings_button"
-            android:layout_marginStart="4dp" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/clearLogButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/clear_log_button"
-        android:layout_marginTop="8dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/log_title"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:title="@string/main_title"
+        app:titleTextColor="@color/black" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/light_gray"
-        android:padding="8dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/logTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:fontFamily="monospace"
-            android:text="" />
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Блок информации о последнем обмене -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_background"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/last_sync_label"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray" />
+
+                        <TextView
+                            android:id="@+id/lastSyncDateTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/last_sync_date"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/lastSyncStatusTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/last_sync_status"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/loadButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/load_button"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/black"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Раздел Заказы -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/orders_title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Список заказов -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ordersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/allOrdersButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/all_orders_button"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Раздел Чеки -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receipts_title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Список чеков -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/receiptsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/allReceiptsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/all_receipts_button"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black" />
+
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>
