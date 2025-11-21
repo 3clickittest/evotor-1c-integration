@@ -57,13 +57,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
 
     class OrderViewHolder extends RecyclerView.ViewHolder {
         private TextView dateTextView;
-        private TextView customerTextView;
+        private TextView orderNumberTextView;
         private TextView amountTextView;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.orderDateTextView);
-            customerTextView = itemView.findViewById(R.id.orderCustomerTextView);
+            orderNumberTextView = itemView.findViewById(R.id.orderNumberTextView);
             amountTextView = itemView.findViewById(R.id.orderAmountTextView);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +79,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
 
         public void bind(Order order) {
             dateTextView.setText(order.getDate());
-            customerTextView.setText(order.getCustomerName() + " " + order.getNumber());
+            orderNumberTextView.setText(order.getNumber() + " " + order.getCustomerName());
             amountTextView.setText(String.format("-%.2f", order.getAmount()));
         }
     }

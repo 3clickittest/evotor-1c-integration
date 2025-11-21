@@ -78,9 +78,9 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.Receip
         }
 
         public void bind(Document receipt) {
-            dateTextView.setText(receipt.getCreatedAt());
+            dateTextView.setText(receipt.getDate());
             customerTextView.setText(receipt.getUuid());
-            amountTextView.setText(String.format("-%.2f", receipt.getSum()));
+            amountTextView.setText(String.format("-%.2f", receipt.getTotalSum()));
         }
     }
 }
